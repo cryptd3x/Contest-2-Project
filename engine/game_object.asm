@@ -123,6 +123,13 @@ get_first_component_which_is_a PROC PUBLIC USES ecx ebx edx esi, componentType: 
 	ret
 get_first_component_which_is_a ENDP
 
+; // ----------------------------------
+; // game_object_start_virtual
+; // Calls the GameObject's virtual start method
+; //
+; // Register Parameters: 
+; //	ecx - THIS pointer
+; // ----------------------------------
 game_object_start_virtual PROC PUBLIC USES ebx
 	mov ebx, (GameObject PTR [ecx]).pVt
 	mov ebx, (GameObject_vtable PTR [ebx]).pStart
