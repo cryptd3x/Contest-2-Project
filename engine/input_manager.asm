@@ -59,3 +59,20 @@ updateInput PROC PUBLIC USES ebx ecx edx esi edi
 
 	ret
 updateInput ENDP
+
+isKeyPressed PROC PUBLIC USES ebx, vkCode: VK_CODE
+	movzx ebx, vkCode
+	mov al, curInputBuffer[ebx]
+	test al, 80h ; // Test the high bit
+	jz keyNotPressed
+
+	; // Key is pressed, return 1
+	mov eax, 1
+	jmp exitIsKeyPressed
+
+keyNotPressed:
+	mov eax, 0
+
+exitIsKeyPressed:
+	ret
+isKeyPressed ENDP
