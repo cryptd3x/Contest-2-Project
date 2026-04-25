@@ -27,6 +27,12 @@ curInputBuffer BYTE 256 DUP(0)
 ; // Holds the data for the previous input buffer for determining if a key was just pressed
 prevInputBuffer BYTE 256 DUP(0)
 
+.code
+; // ----------------------------------
+; // updateInput
+; // This should be called every frame by Scene. Updates the 
+; // current and previous buffers.
+; // ----------------------------------
 updateInput PROC PUBLIC USES ebx ecx edx esi edi
 	; // Copy the current buffer to the previous
 	cld
