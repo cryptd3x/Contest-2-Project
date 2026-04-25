@@ -26,3 +26,18 @@ curInputBuffer BYTE 256 DUP(0)
 
 ; // Holds the data for the previous input buffer for determining if a key was just pressed
 prevInputBuffer BYTE 256 DUP(0)
+
+updateInput PROC PUBLIC USES ebx ecx edx esi edi
+	; // Copy the current buffer to the previous
+	cld
+    mov esi, OFFSET curInputBuffer
+    mov edi, OFFSET prevInputBuffer
+    mov ecx, 256
+    rep movsb
+
+	; // Get the current input state for all 256 key codes
+	mov ebx, 0
+	.WHILE ebx <= 0FFh
+		INVOKE GetAsyncKeyState, ebx
+		test ah, 80h
+		jz keyUp
