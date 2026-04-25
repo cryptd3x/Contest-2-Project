@@ -82,6 +82,11 @@ exitIsKeyPressed:
 	ret
 isKeyPressed ENDP
 
+; // ----------------------------------
+; // isKeyJustPressed
+; // Returns 1 if a key is just pressed this frame and 0 if the key
+; // was not just pressed this frame.
+; // ----------------------------------
 isKeyJustPressed PROC PUBLIC USES ebx, vkCode: VK_CODE
 	mov al, curInputBuffer[vkCode]
 	mov bl, prevInputBuffer[vkCode]
