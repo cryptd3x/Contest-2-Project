@@ -60,6 +60,11 @@ updateInput PROC PUBLIC USES ebx ecx edx esi edi
 	ret
 updateInput ENDP
 
+; // ----------------------------------
+; // isKeyPressed
+; // Returns 1 if a key is currently pressed and 0 if a key
+; // is not currently pressed this frame.
+; // ----------------------------------
 isKeyPressed PROC PUBLIC USES ebx, vkCode: VK_CODE
 	movzx ebx, vkCode
 	mov al, curInputBuffer[ebx]
