@@ -41,3 +41,15 @@ updateInput PROC PUBLIC USES ebx ecx edx esi edi
 		INVOKE GetAsyncKeyState, ebx
 		test ah, 80h
 		jz keyUp
+
+	keyDown:
+		mov curInputBuffer[ebx], 80h ; // Set the most significant bit
+		jmp endLoop
+	keyUp:
+		mov curInputBuffer[ebx], 0 ; // Clear the most significant bit
+	endLoop:
+		inc ebx
+	.ENDW
+
+	ret
+updateInput ENDP
