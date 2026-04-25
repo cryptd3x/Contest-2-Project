@@ -1,3 +1,8 @@
+; transform_component.asm
+INCLUDE default_header.inc
+INCLUDE heap_functions.inc
+INCLUDE transform_component.inc
+
 .code
 init_transform_component PROC PUBLIC USES esi, x: DWORD, y: DWORD, ignoreCamera: DWORD
 	INVOKE init_component
@@ -17,3 +22,5 @@ new_transform_component PROC PUBLIC USES ecx, x: DWORD, y: DWORD, ignoreCamera: 
 	INVOKE init_transform_component, x, y, ignoreCamera
 	ret
 new_transform_component ENDP
+
+END
