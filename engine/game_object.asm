@@ -42,6 +42,7 @@ add_component PROC PUBLIC USES eax ebx ecx esi edi, pGameObject: DWORD, pCompone
 	ret
 add_component ENDP
 
+
 ; // ********************************************
 ; // Constructor Methods
 ; // ********************************************
@@ -62,6 +63,13 @@ init_game_object PROC PUBLIC USES esi, maxComponents:DWORD
 	ret
 init_game_object ENDP
 
+; // ----------------------------------
+; // free_game_object
+; // Convenient method for freeing a GameObject
+; //
+; // Register Parameters: 
+; //	ecx - THIS pointer
+; // ----------------------------------
 free_game_object PROC PUBLIC
 	lea ecx, (GameObject PTR [ecx]).components
 	INVOKE free_unordered_vector
@@ -80,17 +88,6 @@ new_game_object PROC PUBLIC USES ecx, maxComponents:DWORD
 	ret ;// Return with the address of the memory block in HeapAlloc
 new_game_object ENDP
 
-game_object_start PROC stdcall PUBLIC
-	ret
-game_object_start ENDP
-
-game_object_update PROC stdcall PUBLIC, deltaTime:REAL4
-	ret
-game_object_update ENDP
-
-game_object_exit PROC stdcall PUBLIC
-	ret
-game_object_exit ENDP
 
 get_first_component_which_is_a PROC PUBLIC USES ecx edx esi, componentType:ENUM_COMPONENT_ID
 	lea ecx, (GameObject PTR [ecx]).components
