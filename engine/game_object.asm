@@ -168,6 +168,19 @@ game_object_free_virtual PROC PUBLIC USES ebx
 game_object_free_virtual ENDP
 
 ; // ----------------------------------
+; // game_object_update
+; // Default blank update method for a GameObject
+; // Can be left blank, or overriden by the virtual function table
+; // 
+; // Register Parameters: 
+; //	ecx - THIS pointer
+; // ----------------------------------
+game_object_update PROC stdcall PUBLIC, deltaTime: REAL4
+	mov eax, deltaTime
+	ret
+game_object_update ENDP
+
+; // ----------------------------------
 ; // game_object_exit
 ; // Default blank exit method for a GameObject
 ; // Can be left blank, or overriden by the virtual function table
