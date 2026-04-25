@@ -15,6 +15,13 @@ init_game_object PROC PUBLIC USES esi, maxComponents:DWORD
 	ret
 init_game_object ENDP
 
+free_game_object PROC PUBLIC
+	lea ecx, (GameObject PTR [ecx]).components
+	INVOKE free_unordered_vector
+	INVOKE HeapFree, hHeap, 0, ecx
+	ret
+free_game_object ENDP
+
 new_game_object PROC PUBLIC USES ecx, maxComponents:DWORD
 	INVOKE HeapAlloc, hHeap, HEAP_GENERATE_EXCEPTIONS, SIZEOF GameObject
 	mov ecx, eax
@@ -33,3 +40,9 @@ game_object_update ENDP
 game_object_exit PROC stdcall PUBLIC
 	ret
 game_object_exit ENDP
+
+add_component PROC PUBLIC USES ecx, pGameObject:DWORD, pComponent:DWORD
+	lea ecx, (GameObject PTR [pGameObject]).components
+	INVOKE push_back, pComponent
+	ret
+add_component ENDP
