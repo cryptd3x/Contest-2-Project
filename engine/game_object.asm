@@ -23,6 +23,17 @@ INCLUDE heap_functions.inc
 GAMEOBJECT_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET game_object_update, OFFSET game_object_exit, OFFSET free_game_object>
 
 .code
+; // ********************************************
+; // Constructor Methods
+; // ********************************************
+
+; // ----------------------------------
+; // init_game_object
+; // Initializes memory with the contents of a GameObject
+; // 
+; // Register Parameters: 
+; //	ecx - THIS pointer
+; // ----------------------------------
 init_game_object PROC PUBLIC USES esi, maxComponents:DWORD
 	mov (GameObject PTR [ecx]).gameObjectType, DEFAULT_GAME_OBJECT_ID
 	mov (GameObject PTR [ecx]).pVt, OFFSET GAMEOBJECT_VTABLE
@@ -39,11 +50,15 @@ free_game_object PROC PUBLIC
 	ret
 free_game_object ENDP
 
+; // ----------------------------------
+; // new_game_object
+; // Reserves heap space for the Object with parameters calls the initializer method
+; // ----------------------------------
 new_game_object PROC PUBLIC USES ecx, maxComponents:DWORD
 	INVOKE HeapAlloc, hHeap, HEAP_GENERATE_EXCEPTIONS, SIZEOF GameObject
-	mov ecx, eax
+	mov ecx, eax ;// Move the memory address to ecx so it can function as a "this" pointer
 	INVOKE init_game_object, maxComponents
-	ret
+	ret ;// Return with the address of the memory block in HeapAlloc
 new_game_object ENDP
 
 game_object_start PROC stdcall PUBLIC
