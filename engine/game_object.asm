@@ -1,3 +1,7 @@
+INCLUDE default_header.inc
+INCLUDE game_object.inc
+INCLUDE heap_functions.inc
+
 .data
 GAMEOBJECT_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET game_object_update, OFFSET game_object_exit, OFFSET free_game_object>
 
@@ -17,3 +21,15 @@ new_game_object PROC PUBLIC USES ecx, maxComponents:DWORD
 	INVOKE init_game_object, maxComponents
 	ret
 new_game_object ENDP
+
+game_object_start PROC stdcall PUBLIC
+	ret
+game_object_start ENDP
+
+game_object_update PROC stdcall PUBLIC, deltaTime:REAL4
+	ret
+game_object_update ENDP
+
+game_object_exit PROC stdcall PUBLIC
+	ret
+game_object_exit ENDP
