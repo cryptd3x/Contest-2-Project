@@ -54,12 +54,23 @@ add_component ENDP
 ; // Register Parameters: 
 ; //	ecx - THIS pointer
 ; // ----------------------------------
-init_game_object PROC PUBLIC USES esi, maxComponents:DWORD
+init_game_object PROC PUBLIC USES esi ebx edx, maxComponents : DWORD
+	local pThis: DWORD
+	mov pThis, ecx
 	mov (GameObject PTR [ecx]).gameObjectType, DEFAULT_GAME_OBJECT_ID
+	mov (GameObject PTR [ecx]).awaitingFree, 0 ; // Set awaiting free to false (0)
+	mov (GameObject PTR [ecx]).pParentScene, 0 ; // Set parent to a NULL pointer
+
+	; // Set up vTable
 	mov (GameObject PTR [ecx]).pVt, OFFSET GAMEOBJECT_VTABLE
-	mov (GameObject PTR [ecx]).awaitingFree, 0
+
+	; // Now set up the component pointer table
 	lea ecx, (GameObject PTR [ecx]).components
 	INVOKE init_unordered_vector, maxComponents
+
+	mov ecx, pThis
+	mov eax, ecx ; // Return the this pointer
+
 	ret
 init_game_object ENDP
 
