@@ -88,23 +88,41 @@ new_game_object PROC PUBLIC USES ecx, maxComponents:DWORD
 	ret ;// Return with the address of the memory block in HeapAlloc
 new_game_object ENDP
 
+; // ********************************************
+; // Instance methods
+; // ********************************************
 
-get_first_component_which_is_a PROC PUBLIC USES ecx edx esi, componentType:ENUM_COMPONENT_ID
+; // ----------------------------------
+; // get_first_component_which_is_a
+; // Returns a pointer to the first component of the GameObject that is
+; // the type specified, or NULL if it doesn't exist.
+; // 
+; // Register Parameters: 
+; //	ecx - THIS pointer
+; // ----------------------------------
+get_first_component_which_is_a PROC PUBLIC USES ecx ebx edx esi, componentType: ENUM_COMPONENT_ID
+	local pThis
+	mov pThis, ecx
 	lea ecx, (GameObject PTR [ecx]).components
 	mov ebx, (UnorderedVector PTR [ecx]).count
 	mov eax, (UnorderedVector PTR [ecx]).pData
-	mov edx, 0
+	mov edx, 0 ; // int i = 0
+	; // Iterate through the Components
 	.WHILE edx < ebx
-		mov esi, [eax + edx*4]
-		.IF (Component PTR [esi]).componentType == componentType
-			mov eax, esi
-			ret
+		; // esi = components[i]
+		mov esi, [eax + edx * 4]
+		mov ecx, (Component PTR [esi]).componentType
+		.IF ecx == componentType
+			mov eax, esi ; // return the pointer to the component
+			jmp exit_get_first_component_which_is_a
 		.ENDIF
 		inc edx
 	.ENDW
-	mov eax, 0
+	mov eax, 0 ; // Return NULL if nothing was found
+	exit_get_first_component_which_is_a:
 	ret
 get_first_component_which_is_a ENDP
+
 
 add_component PROC PUBLIC USES ecx, pGameObject:DWORD, pComponent:DWORD
 	lea ecx, (GameObject PTR [pGameObject]).components
