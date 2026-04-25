@@ -38,3 +38,19 @@ instantiate_game_object PROC PUBLIC USES esi, pGameObject:DWORD
 	mov (GameObject PTR [pGameObject]).pParentScene, esi
 	ret
 instantiate_game_object ENDP
+
+queue_free_game_object PROC PUBLIC USES esi, pGameObject:DWORD
+	mov esi, ecx
+	lea ecx, (Scene PTR [ecx]).freeQueue
+	INVOKE push_back, pGameObject
+	mov (GameObject PTR [pGameObject]).awaitingFree, 0FFFFFFFFh
+	ret
+queue_free_game_object ENDP
+
+scene_update PROC PUBLIC USES ecx, deltaTime:REAL4
+	INVOKE updateInput
+	; TODO: process start queue, update objects, free queue, render (add later)
+	ret
+scene_update ENDP
+
+end
