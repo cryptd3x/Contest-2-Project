@@ -38,3 +38,5 @@ new_tetromino ENDP
 tetromino_update PROC stdcall PUBLIC USES ecx, deltaTime:REAL4
 	ret
 tetromino_update ENDP
+
+end
