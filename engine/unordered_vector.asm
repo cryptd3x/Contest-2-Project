@@ -30,6 +30,7 @@ free_unordered_vector ENDP
 push_back PROC PUBLIC USES eax ebx edx edi, element: DWORD
 	mov ebx, (UnorderedVector PTR [ecx]).count
 	mov edx, (UnorderedVector PTR [ecx]).capacity
+
 	.IF ebx == edx
 		.IF edx == 0
 			mov edx, 1
@@ -40,6 +41,7 @@ push_back PROC PUBLIC USES eax ebx edx edi, element: DWORD
 		INVOKE HeapReAlloc, hHeap, HEAP_GENERATE_EXCEPTIONS, (UnorderedVector PTR [ecx]).pData, edx
 		mov (UnorderedVector PTR [ecx]).pData, eax
 	.ENDIF
+
 	mov edi, (UnorderedVector PTR [ecx]).pData
 	mov eax, (UnorderedVector PTR [ecx]).count
 	mov [edi + eax*4], element
