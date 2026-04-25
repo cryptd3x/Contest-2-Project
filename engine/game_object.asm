@@ -41,6 +41,23 @@ game_object_exit PROC stdcall PUBLIC
 	ret
 game_object_exit ENDP
 
+get_first_component_which_is_a PROC PUBLIC USES ecx edx esi, componentType:ENUM_COMPONENT_ID
+	lea ecx, (GameObject PTR [ecx]).components
+	mov ebx, (UnorderedVector PTR [ecx]).count
+	mov eax, (UnorderedVector PTR [ecx]).pData
+	mov edx, 0
+	.WHILE edx < ebx
+		mov esi, [eax + edx*4]
+		.IF (Component PTR [esi]).componentType == componentType
+			mov eax, esi
+			ret
+		.ENDIF
+		inc edx
+	.ENDW
+	mov eax, 0
+	ret
+get_first_component_which_is_a ENDP
+
 add_component PROC PUBLIC USES ecx, pGameObject:DWORD, pComponent:DWORD
 	lea ecx, (GameObject PTR [pGameObject]).components
 	INVOKE push_back, pComponent
