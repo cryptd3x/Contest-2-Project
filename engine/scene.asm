@@ -25,3 +25,16 @@ new_scene PROC PUBLIC USES ecx, maxGameObjects:DWORD
 	INVOKE init_scene, maxGameObjects
 	ret
 new_scene ENDP
+
+free_scene PROC PUBLIC
+	INVOKE HeapFree, hHeap, 0, ecx
+	ret
+free_scene ENDP
+
+instantiate_game_object PROC PUBLIC USES esi, pGameObject:DWORD
+	mov esi, ecx
+	lea ecx, (Scene PTR [ecx]).startQueue
+	INVOKE push_back, pGameObject
+	mov (GameObject PTR [pGameObject]).pParentScene, esi
+	ret
+instantiate_game_object ENDP
