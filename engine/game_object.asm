@@ -1,17 +1,20 @@
 ; // ==================================
 ; // GameObject
 ; // ----------------------------------
-; //	GameObjects are the core elements of a scene
+; // GameObjects are the core elements of a scene
 ; // that contain gameplay logic and anything the player
 ; // will see.
-; //	The GameObject STRUCT is intended to be 'subclassed' by 
+; //
+; // The GameObject STRUCT is intended to be 'subclassed' by 
 ; // overriding the virtual function table.
-; //	GameObjects contain a list of components that
+; //
+; // GameObjects contain a list of components that
 ; // define utility behavior such as sprites to render
 ; // or animation states. These componenets are updated
 ; // by the scene_update to keep their auxillary functionality
 ; // separate from main game logic.
 ; // ==================================
+
 INCLUDE default_header.inc
 INCLUDE game_object.inc
 INCLUDE game_object_ids.inc
@@ -27,7 +30,6 @@ GAMEOBJECT_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET game_objec
 ; // ********************************************
 ; // Static methods
 ; // ********************************************
-
 ; // ----------------------------------
 ; // add_component
 ; // Initializes memory with the contents of a GameObject
@@ -35,10 +37,8 @@ GAMEOBJECT_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET game_objec
 add_component PROC PUBLIC USES eax ebx ecx esi edi, pGameObject: DWORD, pComponent: DWORD
 	mov esi, pGameObject
 	lea ecx, (GameObject PTR [esi]).components
-	
 	mov eax, pComponent
 	INVOKE push_back, eax
-
 	ret
 add_component ENDP
 
@@ -130,7 +130,7 @@ new_game_object ENDP
 ; // the type specified, or NULL if it doesn't exist.
 ; // 
 ; // Register Parameters: 
-; //	ecx - THIS pointer
+; // ecx - THIS pointer
 ; // ----------------------------------
 get_first_component_which_is_a PROC PUBLIC USES ecx ebx edx esi, componentType: ENUM_COMPONENT_ID
 	local pThis
@@ -160,7 +160,7 @@ get_first_component_which_is_a ENDP
 ; // Calls the GameObject's virtual start method
 ; //
 ; // Register Parameters: 
-; //	ecx - THIS pointer
+; // ecx - THIS pointer
 ; // ----------------------------------
 game_object_start_virtual PROC PUBLIC USES ebx
 	mov ebx, (GameObject PTR [ecx]).pVt
@@ -175,7 +175,7 @@ game_object_start_virtual ENDP
 ; // Can be left blank, or overriden by the virtual function table
 ; // 
 ; // Register Parameters: 
-; //	ecx - THIS pointer
+; // ecx - THIS pointer
 ; // ----------------------------------
 game_object_update_virtual PROC stdcall PUBLIC USES ebx, deltaTime:REAL4
 	mov ebx, (GameObject PTR [ecx]).pVt
@@ -190,7 +190,7 @@ game_object_update_virtual ENDP
 ; // Calls the GameObject's virtual update method
 ; //
 ; // Register Parameters: 
-; //	ecx - THIS pointer
+; // ecx - THIS pointer
 ; // ----------------------------------
 game_object_free_virtual PROC PUBLIC USES ebx
 	mov ebx, (GameObject PTR [ecx]).pVt
@@ -205,7 +205,7 @@ game_object_free_virtual ENDP
 ; // Can be left blank, or overriden by the virtual function table
 ; // 
 ; // Register Parameters: 
-; //	ecx - THIS pointer
+; // ecx - THIS pointer
 ; // ----------------------------------
 game_object_update PROC stdcall PUBLIC, deltaTime: REAL4
 	mov eax, deltaTime
@@ -218,7 +218,7 @@ game_object_update ENDP
 ; // Can be left blank, or overriden by the virtual function table
 ; // 
 ; // Register Parameters: 
-; //	ecx - THIS pointer
+; // ecx - THIS pointer
 ; // ----------------------------------
 game_object_exit PROC stdcall PUBLIC
 	ret
@@ -230,7 +230,7 @@ game_object_exit ENDP
 ; // Can be left blank, or overriden by the virtual function table
 ; // 
 ; // Register Parameters: 
-; //	ecx - THIS pointer
+; // ecx - THIS pointer
 ; // ----------------------------------
 game_object_start PROC stdcall PUBLIC
 	ret
