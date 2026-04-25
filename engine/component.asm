@@ -16,3 +16,12 @@ free_component PROC PUBLIC
 	INVOKE HeapFree, hHeap, 0, ecx
 	ret
 free_component ENDP
+
+free_component_virtual PROC PUBLIC USES ebx
+	mov ebx, (Component PTR [ecx]).pVt
+	mov ebx, (Component_vtable PTR [ebx]).pFree
+	call ebx
+	ret
+free_component_virtual ENDP
+
+END
