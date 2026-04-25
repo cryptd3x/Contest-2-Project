@@ -81,3 +81,23 @@ keyNotPressed:
 exitIsKeyPressed:
 	ret
 isKeyPressed ENDP
+
+isKeyJustPressed PROC PUBLIC USES ebx, vkCode: VK_CODE
+	mov al, curInputBuffer[vkCode]
+	mov bl, prevInputBuffer[vkCode]
+	test al, 80h ; // Test the high bit
+	jz keyNotJustPressed
+	
+	; // Test if the key was also pressed last frame
+	test bl, 80h
+	jnz keyNotJustPressed
+
+	; // Key was just pressed, return 1
+	mov eax, 1
+	jmp exitIsKeyJustPressed
+		
+keyNotJustPressed:
+	mov eax, 0
+exitIsKeyJustPressed:
+	ret
+isKeyJustPressed ENDP
