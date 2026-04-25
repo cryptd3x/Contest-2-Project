@@ -1,3 +1,11 @@
+INCLUDE default_header.inc
+INCLUDE tetris_board.inc
+INCLUDE heap_functions.inc
+
+.data
+TETRIS_BOARD_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET tetris_board_update, OFFSET game_object_exit, OFFSET free_game_object>
+
+.code
 init_tetris_board PROC PUBLIC USES ecx
 	INVOKE init_game_object, 1
 	mov (GameObject PTR [ecx]).gameObjectType, TETRIS_BOARD_GAME_OBJECT_ID
