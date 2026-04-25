@@ -123,13 +123,6 @@ get_first_component_which_is_a PROC PUBLIC USES ecx ebx edx esi, componentType: 
 	ret
 get_first_component_which_is_a ENDP
 
-
-add_component PROC PUBLIC USES ecx, pGameObject:DWORD, pComponent:DWORD
-	lea ecx, (GameObject PTR [pGameObject]).components
-	INVOKE push_back, pComponent
-	ret
-add_component ENDP
-
 game_object_start_virtual PROC PUBLIC USES ebx
 	mov ebx, (GameObject PTR [ecx]).pVt
 	mov ebx, (GameObject_vtable PTR [ebx]).pStart
