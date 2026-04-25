@@ -1,3 +1,10 @@
+INCLUDE default_header.inc
+INCLUDE scene.inc
+INCLUDE heap_functions.inc
+INCLUDE input_manager.inc
+INCLUDE renderer.inc
+
+.code
 init_scene PROC PUBLIC USES esi, maxGameObjects:DWORD
 	lea ecx, (Scene PTR [ecx]).camera
 	INVOKE init_camera, 0, 0
