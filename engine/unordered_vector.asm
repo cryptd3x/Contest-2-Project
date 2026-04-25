@@ -69,3 +69,5 @@ remove_element PROC PUBLIC USES edi ebx ecx edx, element: DWORD
 	mov eax, 1
 	ret
 remove_element ENDP
+
+end
