@@ -1,3 +1,13 @@
+; // ==================================
+; // input_manager.inc
+; // ----------------------------------
+; // The input manager is responsible for determining
+; // which keys are currently pressed and providing
+; // a convenient method for other files to determine
+; // the currently pressed keys. This should be
+; // updated on a by-frame basis by a scene.
+; // ==================================
+
 IFNDEF INPUT_MANAGER_INC
 INPUT_MANAGER_INC EQU 1
 
@@ -18,3 +28,5 @@ VK_GAMEPAD_LEFT_THUMBSTICK_DOWN = 0D4h
 updateInput PROTO
 isKeyPressed PROTO vkCode: VK_CODE
 isKeyJustPressed PROTO vkCode: VK_CODE
+
+ENDIF
