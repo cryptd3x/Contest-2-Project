@@ -81,10 +81,31 @@ init_game_object ENDP
 ; // Register Parameters: 
 ; //	ecx - THIS pointer
 ; // ----------------------------------
-free_game_object PROC PUBLIC
+free_game_object PROC PUBLIC USES eax esi ebx
+	; // Destruct the components
+	mov esi, ecx ; // Move the this pointer to esi
+	lea ecx, (GameObject PTR [ecx]).components
+	mov eax, (UnorderedVector PTR [ecx]).pData
+	mov ebx, (UnorderedVector PTR [ecx]).count
+	mov ecx, 0 ; // Loop counter (int i = 0)
+
+	.WHILE ecx < ebx
+		mov edx, [eax + ecx * 4] ; // edx = pComponents[i]
+		; // pComponents[i]->free()
+		push ecx
+		push eax
+		mov ecx, edx
+		INVOKE free_component_virtual
+		pop eax
+		pop ecx
+		inc ecx ; // i++
+	.ENDW
+	
+	mov ecx, esi
 	lea ecx, (GameObject PTR [ecx]).components
 	INVOKE free_unordered_vector
-	INVOKE HeapFree, hHeap, 0, ecx
+	mov ecx, esi ; // Restore the THIS pointer to ecx
+	INVOKE HeapFree, hHeap, 0, ecx ; // Free myself
 	ret
 free_game_object ENDP
 
