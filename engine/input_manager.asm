@@ -106,3 +106,5 @@ keyNotJustPressed:
 exitIsKeyJustPressed:
 	ret
 isKeyJustPressed ENDP
+
+end
