@@ -18,3 +18,16 @@ GameObject STRUCT
 	pVt DWORD ?
 	pParentScene DWORD ?
 	awaitingFree DWORD ?
+GameObject ENDS
+
+add_component PROTO pGameObject:DWORD, pComponent:DWORD
+get_first_component_which_is_a PROTO componentType:ENUM_COMPONENT_ID
+game_object_start_virtual PROTO
+game_object_update_virtual PROTO deltaTime:REAL4
+game_object_free_virtual PROTO
+
+init_game_object PROTO maxComponents:DWORD
+new_game_object PROTO maxComponents:DWORD
+free_game_object PROTO
+
+ENDIF
