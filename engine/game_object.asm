@@ -78,3 +78,12 @@ game_object_update_virtual PROC stdcall PUBLIC USES ebx, deltaTime:REAL4
 	call ebx
 	ret
 game_object_update_virtual ENDP
+
+game_object_free_virtual PROC PUBLIC USES ebx
+	mov ebx, (GameObject PTR [ecx]).pVt
+	mov ebx, (GameObject_vtable PTR [ebx]).pFree
+	call ebx
+	ret
+game_object_free_virtual ENDP
+
+END
