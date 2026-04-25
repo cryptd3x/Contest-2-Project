@@ -23,6 +23,25 @@ INCLUDE heap_functions.inc
 GAMEOBJECT_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET game_object_update, OFFSET game_object_exit, OFFSET free_game_object>
 
 .code
+
+; // ********************************************
+; // Static methods
+; // ********************************************
+
+; // ----------------------------------
+; // add_component
+; // Initializes memory with the contents of a GameObject
+; // ----------------------------------
+add_component PROC PUBLIC USES eax ebx ecx esi edi, pGameObject: DWORD, pComponent: DWORD
+	mov esi, pGameObject
+	lea ecx, (GameObject PTR [esi]).components
+	
+	mov eax, pComponent
+	INVOKE push_back, eax
+
+	ret
+add_component ENDP
+
 ; // ********************************************
 ; // Constructor Methods
 ; // ********************************************
