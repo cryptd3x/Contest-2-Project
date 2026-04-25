@@ -12,3 +12,18 @@ init_camera PROC PUBLIC USES ecx esi, x: DWORD, y: DWORD
 	mov eax, ecx
 	ret
 init_camera ENDP
+
+new_camera PROC PUBLIC USES ecx, x: DWORD, y: DWORD
+	INVOKE HeapAlloc, hHeap, HEAP_GENERATE_EXCEPTIONS, SIZEOF Camera
+	mov ecx, eax ; // Move the memory address to ecx so it can function as a "this" pointer
+	INVOKE init_camera, x, y
+
+	ret ; // Return with the address of the memory block in HeapAlloc
+new_camera ENDP
+
+free_camera PROC PUBLIC 
+	INVOKE HeapFree, hHeap, 0, ecx
+	ret
+free_camera ENDP
+
+END
