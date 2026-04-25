@@ -145,11 +145,24 @@ game_object_update_virtual PROC stdcall PUBLIC USES ebx, deltaTime:REAL4
 	ret
 game_object_update_virtual ENDP
 
+
 game_object_free_virtual PROC PUBLIC USES ebx
 	mov ebx, (GameObject PTR [ecx]).pVt
 	mov ebx, (GameObject_vtable PTR [ebx]).pFree
 	call ebx
 	ret
 game_object_free_virtual ENDP
+
+; // ----------------------------------
+; // game_object_exit
+; // Default blank exit method for a GameObject
+; // Can be left blank, or overriden by the virtual function table
+; // 
+; // Register Parameters: 
+; //	ecx - THIS pointer
+; // ----------------------------------
+game_object_exit PROC stdcall PUBLIC
+	ret
+game_object_exit ENDP
 
 END
