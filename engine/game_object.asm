@@ -63,3 +63,18 @@ add_component PROC PUBLIC USES ecx, pGameObject:DWORD, pComponent:DWORD
 	INVOKE push_back, pComponent
 	ret
 add_component ENDP
+
+game_object_start_virtual PROC PUBLIC USES ebx
+	mov ebx, (GameObject PTR [ecx]).pVt
+	mov ebx, (GameObject_vtable PTR [ebx]).pStart
+	call ebx
+	ret
+game_object_start_virtual ENDP
+
+game_object_update_virtual PROC stdcall PUBLIC USES ebx, deltaTime:REAL4
+	mov ebx, (GameObject PTR [ecx]).pVt
+	mov ebx, (GameObject_vtable PTR [ebx]).pUpdate
+	push deltaTime
+	call ebx
+	ret
+game_object_update_virtual ENDP
