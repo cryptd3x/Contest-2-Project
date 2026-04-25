@@ -1,7 +1,24 @@
+; // ==================================
+; // GameObject
+; // ----------------------------------
+; //	GameObjects are the core elements of a scene
+; // that contain gameplay logic and anything the player
+; // will see.
+; //	The GameObject STRUCT is intended to be 'subclassed' by 
+; // overriding the virtual function table.
+; //	GameObjects contain a list of components that
+; // define utility behavior such as sprites to render
+; // or animation states. These componenets are updated
+; // by the scene_update to keep their auxillary functionality
+; // separate from main game logic.
+; // ==================================
 INCLUDE default_header.inc
 INCLUDE game_object.inc
+INCLUDE game_object_ids.inc
+INCLUDE component.inc
+INCLUDE transform_component.inc
+INCLUDE component_ids.inc
 INCLUDE heap_functions.inc
-
 .data
 GAMEOBJECT_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET game_object_update, OFFSET game_object_exit, OFFSET free_game_object>
 
