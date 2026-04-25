@@ -26,3 +26,23 @@ free_unordered_vector PROC PUBLIC USES esi
 	INVOKE HeapFree, hHeap, 0, esi
 	ret
 free_unordered_vector ENDP
+
+push_back PROC PUBLIC USES eax ebx edx edi, element: DWORD
+	mov ebx, (UnorderedVector PTR [ecx]).count
+	mov edx, (UnorderedVector PTR [ecx]).capacity
+	.IF ebx == edx
+		.IF edx == 0
+			mov edx, 1
+		.ENDIF
+		shl edx, 1
+		mov (UnorderedVector PTR [ecx]).capacity, edx
+		shl edx, 2
+		INVOKE HeapReAlloc, hHeap, HEAP_GENERATE_EXCEPTIONS, (UnorderedVector PTR [ecx]).pData, edx
+		mov (UnorderedVector PTR [ecx]).pData, eax
+	.ENDIF
+	mov edi, (UnorderedVector PTR [ecx]).pData
+	mov eax, (UnorderedVector PTR [ecx]).count
+	mov [edi + eax*4], element
+	inc (UnorderedVector PTR [ecx]).count
+	ret
+push_back ENDP
