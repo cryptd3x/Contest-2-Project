@@ -1,3 +1,10 @@
+; // ==================================
+; // camera.asm
+; // ----------------------------------
+; // A camera defines where spatially a scene should
+; // render its GameObjects.
+; // ==================================
+
 INCLUDE default_header.inc
 INCLUDE heap_functions.inc
 INCLUDE camera.inc
