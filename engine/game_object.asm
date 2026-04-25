@@ -192,4 +192,16 @@ game_object_exit PROC stdcall PUBLIC
 	ret
 game_object_exit ENDP
 
+; // ----------------------------------
+; // game_object_start
+; // Default blank start method for a GameObject
+; // Can be left blank, or overriden by the virtual function table
+; // 
+; // Register Parameters: 
+; //	ecx - THIS pointer
+; // ----------------------------------
+game_object_start PROC stdcall PUBLIC
+	ret
+game_object_start ENDP
+
 END
