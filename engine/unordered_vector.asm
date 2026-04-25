@@ -48,3 +48,24 @@ push_back PROC PUBLIC USES eax ebx edx edi, element: DWORD
 	inc (UnorderedVector PTR [ecx]).count
 	ret
 push_back ENDP
+
+remove_element PROC PUBLIC USES edi ebx ecx edx, element: DWORD
+	mov edi, ecx
+	mov eax, (UnorderedVector PTR [edi]).pData
+	mov ebx, (UnorderedVector PTR [edi]).count
+	mov ecx, 0
+	.WHILE ecx < ebx
+		mov edx, [eax + ecx*4]
+		.IF edx == element
+			dec (UnorderedVector PTR [edi]).count
+			mov ebx, (UnorderedVector PTR [edi]).count
+			mov edx, [eax + ebx*4]
+			mov [eax + ecx*4], edx
+			mov eax, 0
+			ret
+		.ENDIF
+		inc ecx
+	.ENDW
+	mov eax, 1
+	ret
+remove_element ENDP
