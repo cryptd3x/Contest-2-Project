@@ -18,3 +18,11 @@ INCLUDE input_manager.inc
 ; // pressed. Because the function is asynchronous, we can call it at any time and it
 ; // will reliably spit out the exact keys being pressed.
 ; // Documentation used: learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate
+GetAsyncKeyState PROTO vk_code : DWORD
+	
+.data
+; // Holds the data for all 256 virtual keys and whether they are currently pressed
+curInputBuffer BYTE 256 DUP(0)
+
+; // Holds the data for the previous input buffer for determining if a key was just pressed
+prevInputBuffer BYTE 256 DUP(0)
