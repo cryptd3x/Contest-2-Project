@@ -105,11 +105,23 @@ new_tetromino PROC PUBLIC USES ecx
 	ret
 new_tetromino ENDP
 
-can_place PROC PRIVATE USES esi edi ebx, pBoard:DWORD, pTetromino:DWORD, dx_:SDWORD, dy_:SDWORD
-    ; Checks whether the tetromino can be placed at the given offset
-    ; Returns 1 if valid, 0 if collision or out of bounds
-    ret
-can_place ENDP
+can_place PROC PRIVATE USES esi edi ebx edx, pBoard:DWORD, pTetromino:DWORD, dx_:SDWORD, dy_:SDWORD
+    local tx:SDWORD, ty:SDWORD, bx:SDWORD, by:SDWORD, cell:BYTE
+
+    mov esi, pTetromino
+    lea edi, (Tetromino PTR [esi]).shape
+
+    INVOKE get_first_component_which_is_a, TRANSFORM_COMPONENT_ID
+    mov esi, eax
+    mov ebx, (TransformComponent PTR [esi]).x
+    add ebx, dx_
+    mov tx, ebx
+    mov ebx, (TransformComponent PTR [esi]).y
+    add ebx, dy_
+    mov ty, ebx
+
+    mov esi, pTetromino
+    mov ecx, 0
 
 tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
     mov esi, ecx
