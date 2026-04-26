@@ -38,6 +38,11 @@ new_tetromino PROC PUBLIC USES ecx
 	ret
 new_tetromino ENDP
 
+can_place PROC PRIVATE USES esi edi ebx, pBoard:DWORD, pTetromino:DWORD, dx_:SDWORD, dy_:SDWORD
+    ; Checks whether the tetromino can be placed at the given offset
+    ; Returns 1 if valid, 0 if collision or out of bounds
+    ret
+can_place ENDP
 
 tetromino_update PROC stdcall PUBLIC USES ecx, deltaTime:REAL4
 	ret
