@@ -122,6 +122,23 @@ can_place PROC PRIVATE USES esi edi ebx edx, pBoard:DWORD, pTetromino:DWORD, dx_
 
     mov esi, pTetromino
     mov ecx, 0
+	.WHILE ecx < 16
+        mov al, [edi + ecx]
+        mov cell, al
+        .IF cell != 0
+            mov eax, ecx
+            mov edx, 0
+            mov ebx, 4
+            div ebx
+            mov by, eax
+            mov bx, dx
+            mov bx, word ptr dx   ; column
+            movsx eax, bx
+            add eax, tx
+            mov bx, word ptr ax   ; board x
+            mov eax, by
+            add eax, ty
+            mov by, eax
 
 tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
     mov esi, ecx
