@@ -3,6 +3,7 @@ INCLUDE tetris_board.inc
 INCLUDE heap_functions.inc
 INCLUDE tetromino.inc
 INCLUDE transform_component.inc
+INCLUDE component_ids.inc
 
 .data
 TETRIS_BOARD_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET tetris_board_update, OFFSET game_object_exit, OFFSET free_game_object>
@@ -57,7 +58,15 @@ board_lock_tetromino PROC PUBLIC USES esi edi ebx edx, pBoard:DWORD, pTetromino:
             add ebx, ty
             mov eax, edx          ; col
             add eax, tx
-            mov edx, (Tetromino PTR [pTetromino]).typeId
+
+            .IF ebx >= 0 && ebx < TETRIS_BOARD_HEIGHT && eax >= 0 && eax < TETRIS_BOARD_WIDTH
+                mov esi, pBoard
+                lea esi, (TetrisBoard PTR [esi]).grid
+                mov edx, ebx
+                mov ebx, TETRIS_BOARD_WIDTH
+                mul ebx
+                add eax, edx
+                mov edx, (Tetromino PTR [pTetromino]).typeId
                 inc edx               ; store 1-based type
                 mov [esi + eax], dl
             .ENDIF
@@ -108,4 +117,20 @@ board_clear_lines PROC PUBLIC USES esi edi ebx edx, pBoard:DWORD
         .ENDIF
         dec row
     .ENDW
+
+    ; clear top rows
+    .WHILE writeRow != 0FFFFFFFFh
+        mov edi, esi
+        mov eax, writeRow
+        mov ebx, TETRIS_BOARD_WIDTH
+        mul ebx
+        add edi, eax
+        mov ecx, TETRIS_BOARD_WIDTH
+        xor eax, eax
+        rep stosb
+        dec writeRow
+    .ENDW
+    ret
+board_clear_lines ENDP
+
 END
