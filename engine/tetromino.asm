@@ -7,23 +7,28 @@ INCLUDE transform_component.inc
 TETROMINO_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET tetromino_update, OFFSET game_object_exit, OFFSET free_game_object>
 .code
 
-; // BUG FIX: was "USES esi, ecx" — comma terminated USES list early,
-; //   making ecx a phantom parameter instead of a saved register.
-; //   Correct MASM syntax is space-separated: USES esi ecx
-; // BUG FIX: entire proc body was duplicated outside any PROC (lines 21-29),
-; //   causing a second unmatched ENDP and assembler errors. Duplicate removed.
-; // BUG FIX: missing "mov eax, ecx" before ret — new_tetromino was returning
-; //   whatever add_component left in eax (the component ptr), not the Tetromino ptr.
 init_tetromino PROC PUBLIC USES esi ecx
-	INVOKE init_game_object, 2
-	mov (GameObject PTR [ecx]).gameObjectType, TETROMINO_GAME_OBJECT_ID
-	mov (GameObject PTR [ecx]).pVt, OFFSET TETROMINO_VTABLE
-	INVOKE new_transform_component, 40, 5, 0
-	INVOKE add_component, ecx, eax
-	INVOKE new_rect_component, 4, 4, 0, 255, 0, 255
-	INVOKE add_component, ecx, eax
-	mov eax, ecx                           ; // Return the Tetromino pointer
-	ret
+    INVOKE init_game_object, 2
+    mov (GameObject PTR [ecx]).gameObjectType, TETROMINO_GAME_OBJECT_ID
+    mov (GameObject PTR [ecx]).pVt, OFFSET TETROMINO_VTABLE
+    mov esi, ecx
+    mov (Tetromino PTR [esi]).rotation, 0
+    mov (Tetromino PTR [esi]).dropTimer, 0.0
+
+    INVOKE GetTickCount
+    xor edx, edx
+    mov ecx, 7
+    div ecx
+    mov (Tetromino PTR [esi]).typeId, edx
+
+    INVOKE copy_shape, esi, edx, 0
+    INVOKE new_transform_component, 3, -1, 0
+    INVOKE add_component, esi, eax
+    INVOKE new_rect_component, 4, 4, 255, 255, 255, 255
+    INVOKE add_component, esi, eax
+
+    mov eax, esi
+    ret
 init_tetromino ENDP
 
 new_tetromino PROC PUBLIC USES ecx
@@ -32,6 +37,7 @@ new_tetromino PROC PUBLIC USES ecx
 	INVOKE init_tetromino
 	ret
 new_tetromino ENDP
+
 
 tetromino_update PROC stdcall PUBLIC USES ecx, deltaTime:REAL4
 	ret
