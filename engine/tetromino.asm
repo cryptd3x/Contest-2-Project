@@ -1,14 +1,15 @@
 INCLUDE default_header.inc
 INCLUDE tetromino.inc
 INCLUDE heap_functions.inc
+INCLUDE rect_component.inc
 INCLUDE transform_component.inc
 INCLUDE tetris_board.inc
 INCLUDE component_ids.inc
+INCLUDE game_object.inc
 
 .data
 TETROMINO_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET tetromino_update, OFFSET game_object_exit, OFFSET free_game_object>
 
-; 4x4 shapes for each piece type across 4 rotations (flat layout)
 SHAPES LABEL BYTE
     ; I
     BYTE 0,0,0,0, 1,1,1,1, 0,0,0,0, 0,0,0,0
@@ -47,20 +48,21 @@ SHAPES LABEL BYTE
     BYTE 1,1,0,0, 0,1,0,0, 0,1,0,0, 0,0,0,0
 
 PIECE_COLORS DWORD \
-    0FF00FFFFh,  ; I
-    0FFFFFF00h,  ; O
-    0FF800080h,  ; T
-    0FF00FF00h,  ; S
-    0FFFF0000h,  ; Z
-    0FF0000FFh,  ; J
-    0FFFFA500h   ; L
+    0FF00FFFFh,  ; I Cyan
+    0FFFFFF00h,  ; O Yellow
+    0FF800080h,  ; T Purple
+    0FF00FF00h,  ; S Green
+    0FFFF0000h,  ; Z Red
+    0FF0000FFh,  ; J Blue
+    0FFFFA500h   ; L Orange
+
 .code
 
 get_shape_offset PROC PRIVATE, typeId:DWORD, rotation:DWORD
     mov eax, typeId
-    shl eax, 6                ; 64 bytes per type
+    shl eax, 6
     add eax, rotation
-    shl eax, 4                ; 16 bytes per rotation
+    shl eax, 4
     ret
 get_shape_offset ENDP
 
@@ -81,36 +83,31 @@ init_tetromino PROC PUBLIC USES esi ecx
     mov esi, ecx
     mov (Tetromino PTR [esi]).rotation, 0
     mov (Tetromino PTR [esi]).dropTimer, 0.0
-
     INVOKE GetTickCount
     xor edx, edx
     mov ecx, 7
     div ecx
     mov (Tetromino PTR [esi]).typeId, edx
-
     INVOKE copy_shape, esi, edx, 0
     INVOKE new_transform_component, 3, -1, 0
     INVOKE add_component, esi, eax
     INVOKE new_rect_component, 4, 4, 255, 255, 255, 255
     INVOKE add_component, esi, eax
-
     mov eax, esi
     ret
 init_tetromino ENDP
 
 new_tetromino PROC PUBLIC USES ecx
-	INVOKE HeapAlloc, hHeap, HEAP_GENERATE_EXCEPTIONS, SIZEOF Tetromino
-	mov ecx, eax
-	INVOKE init_tetromino
-	ret
+    INVOKE HeapAlloc, hHeap, HEAP_GENERATE_EXCEPTIONS, SIZEOF Tetromino
+    mov ecx, eax
+    INVOKE init_tetromino
+    ret
 new_tetromino ENDP
 
 can_place PROC PRIVATE USES esi edi ebx edx, pBoard:DWORD, pTetromino:DWORD, dx_:SDWORD, dy_:SDWORD
     local tx:SDWORD, ty:SDWORD, bx:SDWORD, by:SDWORD, cell:BYTE
-
     mov esi, pTetromino
     lea edi, (Tetromino PTR [esi]).shape
-
     INVOKE get_first_component_which_is_a, TRANSFORM_COMPONENT_ID
     mov esi, eax
     mov ebx, (TransformComponent PTR [esi]).x
@@ -119,10 +116,9 @@ can_place PROC PRIVATE USES esi edi ebx edx, pBoard:DWORD, pTetromino:DWORD, dx_
     mov ebx, (TransformComponent PTR [esi]).y
     add ebx, dy_
     mov ty, ebx
-
     mov esi, pTetromino
     mov ecx, 0
-	.WHILE ecx < 16
+    .WHILE ecx < 16
         mov al, [edi + ecx]
         mov cell, al
         .IF cell != 0
@@ -140,7 +136,7 @@ can_place PROC PRIVATE USES esi edi ebx edx, pBoard:DWORD, pTetromino:DWORD, dx_
             add eax, ty
             mov by, eax
 
-			; bounds check
+            ; bounds check
             .IF bx < 0 || bx >= TETRIS_BOARD_WIDTH || by >= TETRIS_BOARD_HEIGHT
                 mov eax, 0
                 ret
@@ -158,7 +154,7 @@ can_place PROC PRIVATE USES esi edi ebx edx, pBoard:DWORD, pTetromino:DWORD, dx_
             mul ebx
             add eax, bx
             mov al, [esi + eax]
-			.IF al != 0
+            .IF al != 0
                 mov eax, 0
                 ret
             .ENDIF
@@ -220,7 +216,7 @@ tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
     .ENDIF
 
     ; Automatic downward movement
-fld (Tetromino PTR [esi]).dropTimer
+    fld (Tetromino PTR [esi]).dropTimer
     fadd deltaTime
     fstp (Tetromino PTR [esi]).dropTimer
 
