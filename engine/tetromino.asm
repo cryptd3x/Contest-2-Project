@@ -7,6 +7,24 @@ INCLUDE transform_component.inc
 TETROMINO_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET tetromino_update, OFFSET game_object_exit, OFFSET free_game_object>
 .code
 
+get_shape_offset PROC PRIVATE, typeId:DWORD, rotation:DWORD
+    mov eax, typeId
+    shl eax, 6                ; 64 bytes per type
+    add eax, rotation
+    shl eax, 4                ; 16 bytes per rotation
+    ret
+get_shape_offset ENDP
+
+copy_shape PROC PRIVATE USES esi edi, pTetromino:DWORD, typeId:DWORD, rot:DWORD
+    mov esi, pTetromino
+    lea edi, (Tetromino PTR [esi]).shape
+    INVOKE get_shape_offset, typeId, rot
+    lea esi, SHAPES[eax]
+    mov ecx, 16
+    rep movsb
+    ret
+copy_shape ENDP
+
 init_tetromino PROC PUBLIC USES esi ecx
     INVOKE init_game_object, 2
     mov (GameObject PTR [ecx]).gameObjectType, TETROMINO_GAME_OBJECT_ID
