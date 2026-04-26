@@ -57,5 +57,22 @@ board_lock_tetromino PROC PUBLIC USES esi edi ebx edx, pBoard:DWORD, pTetromino:
             add ebx, ty
             mov eax, edx          ; col
             add eax, tx
+            mov edx, (Tetromino PTR [pTetromino]).typeId
+                inc edx               ; store 1-based type
+                mov [esi + eax], dl
+            .ENDIF
+        .ENDIF
+        inc ecx
+    .ENDW
+    ret
+board_lock_tetromino ENDP
 
+board_clear_lines PROC PUBLIC USES esi edi ebx edx, pBoard:DWORD
+    local row:DWORD, writeRow:DWORD
+
+    mov esi, pBoard
+    lea esi, (TetrisBoard PTR [esi]).grid
+    mov writeRow, TETRIS_BOARD_HEIGHT - 1
+
+    mov row, TETRIS_BOARD_HEIGHT - 1
 END
