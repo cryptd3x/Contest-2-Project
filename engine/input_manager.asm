@@ -88,8 +88,13 @@ isKeyPressed ENDP
 ; // was not just pressed this frame.
 ; // ----------------------------------
 isKeyJustPressed PROC PUBLIC USES ebx, vkCode: VK_CODE
-	mov al, curInputBuffer[vkCode]
-	mov bl, prevInputBuffer[vkCode]
+	; // BUG FIXED: was "mov al, curInputBuffer[vkCode]" / "mov bl, prevInputBuffer[vkCode]"
+	; //   MASM resolves a stack-parameter name as a constant EBP-relative displacement,
+	; //   so the expression evaluated to curInputBuffer + <fixed offset>, not the key index.
+	; //   Fix: load the value into a register first, exactly as isKeyPressed does.
+	movzx ebx, vkCode
+	mov al, curInputBuffer[ebx]
+	mov bl, prevInputBuffer[ebx]
 	test al, 80h ; // Test the high bit
 	jz keyNotJustPressed
 	
