@@ -17,6 +17,11 @@ init_scene PROC PUBLIC USES esi, maxGameObjects:DWORD
 	INVOKE init_unordered_vector, maxGameObjects
 	lea ecx, (Scene PTR [esi]).renderCommands
 	INVOKE init_unordered_vector, maxGameObjects
+	; // BUG FIX: init_scene had no return value. The last INVOKE left eax pointing at
+	; //   the renderCommands embedded field (Scene base + 52), not the Scene base.
+	; //   new_scene returned that wrong pointer to every caller. esi still holds the
+	; //   original Scene pointer from the "mov esi, ecx" at the top of this proc.
+	mov eax, esi
 	ret
 init_scene ENDP
 
