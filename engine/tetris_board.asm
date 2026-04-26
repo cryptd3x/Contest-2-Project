@@ -47,5 +47,15 @@ board_lock_tetromino PROC PUBLIC USES esi edi ebx edx, pBoard:DWORD, pTetromino:
 
     mov esi, pTetromino
     mov ecx, 0
+    .WHILE ecx < 16
+        .IF BYTE PTR [edi + ecx] != 0
+            mov eax, ecx
+            mov edx, 0
+            mov ebx, 4
+            div ebx
+            mov ebx, eax          ; row
+            add ebx, ty
+            mov eax, edx          ; col
+            add eax, tx
 
 END
