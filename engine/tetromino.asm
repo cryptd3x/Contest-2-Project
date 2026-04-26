@@ -171,11 +171,17 @@ can_place ENDP
 
 tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
     mov esi, ecx
-    ; Handles player input for movement and rotation
-    INVOKE isKeyJustPressed, VK_LEFT
-    .IF eax ; then attempt left movement  
-    .ENDIF
 
+    ; Left
+    INVOKE isKeyJustPressed, VK_LEFT
+    .IF eax
+        INVOKE get_first_game_object_which_is_a, TETRIS_BOARD_GAME_OBJECT_ID
+        INVOKE can_place, eax, esi, -1, 0
+        .IF eax
+            INVOKE get_first_component_which_is_a, TRANSFORM_COMPONENT_ID
+            dec (TransformComponent PTR [eax]).x
+        .ENDIF
+    .ENDIF
     INVOKE isKeyJustPressed, VK_RIGHT
     .IF eax ; then attempt right movement
     .ENDIF
