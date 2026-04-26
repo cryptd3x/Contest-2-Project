@@ -182,12 +182,22 @@ tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
             dec (TransformComponent PTR [eax]).x
         .ENDIF
     .ENDIF
+
+    ; Right
     INVOKE isKeyJustPressed, VK_RIGHT
-    .IF eax ; then attempt right movement
+    .IF eax
+        INVOKE get_first_game_object_which_is_a, TETRIS_BOARD_GAME_OBJECT_ID
+        INVOKE can_place, eax, esi, 1, 0
+        .IF eax
+            INVOKE get_first_component_which_is_a, TRANSFORM_COMPONENT_ID
+            inc (TransformComponent PTR [eax]).x
+        .ENDIF
     .ENDIF
 
-    INVOKE isKeyJustPressed, VK_DOWN
-    .IF eax ; then soft drop
+    ; Down (soft drop)
+    INVOKE isKeyPressed, VK_DOWN
+    .IF eax
+        mov (Tetromino PTR [esi]).dropTimer, 0.05   ; faster drop
     .ENDIF
 
     INVOKE isKeyJustPressed, VK_UP
