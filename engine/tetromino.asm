@@ -80,3 +80,19 @@ tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
     INVOKE isKeyJustPressed, VK_UP
     .IF eax ; then rotate
     .ENDIF
+
+    ; Automatic downward movement
+    fld (Tetromino PTR [esi]).dropTimer
+    fadd deltaTime
+    fstp (Tetromino PTR [esi]).dropTimer
+
+    .IF (Tetromino PTR [esi]).dropTimer > 0.4
+        .IF can_place(...) == 0 ; then lock piece to board, clear completed lines, queue free, spawn new piece   
+        .ELSE ; then move down one row
+        .ENDIF
+        mov (Tetromino PTR [esi]).dropTimer, 0.0
+    .ENDIF
+    ret
+tetromino_update ENDP
+
+end
