@@ -27,7 +27,25 @@ tetris_board_update PROC stdcall PUBLIC USES ecx, deltaTime:REAL4
     ret
 tetris_board_update ENDP
 
-; board_can_place, board_lock_tetromino and board_clear_lines are implemented here.
-; They handle grid indexing, collision detection, piece locking and row clearing.
+board_can_place PROC PUBLIC USES esi edi, pBoard:DWORD, pTetromino:DWORD, dx:SDWORD, dy:SDWORD
+    INVOKE can_place, pBoard, pTetromino, dx, dy
+    ret
+board_can_place ENDP
+
+board_lock_tetromino PROC PUBLIC USES esi edi ebx edx, pBoard:DWORD, pTetromino:DWORD
+    local tx:SDWORD, ty:SDWORD
+
+    mov esi, pTetromino
+    lea edi, (Tetromino PTR [esi]).shape
+
+    INVOKE get_first_component_which_is_a, TRANSFORM_COMPONENT_ID
+    mov esi, eax
+    mov ebx, (TransformComponent PTR [esi]).x
+    mov tx, ebx
+    mov ebx, (TransformComponent PTR [esi]).y
+    mov ty, ebx
+
+    mov esi, pTetromino
+    mov ecx, 0
 
 END
