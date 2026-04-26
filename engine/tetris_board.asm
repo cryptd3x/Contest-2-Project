@@ -95,4 +95,17 @@ board_clear_lines PROC PUBLIC USES esi edi ebx edx, pBoard:DWORD
             mov ebx, TETRIS_BOARD_WIDTH
             mul ebx
             add edi, eax
+            mov ebx, row
+            mov eax, ebx
+            mov ebx, TETRIS_BOARD_WIDTH
+            mul ebx
+            add esi, eax
+            mov ecx, TETRIS_BOARD_WIDTH
+            rep movsb
+            dec writeRow
+            mov esi, pBoard
+            lea esi, (TetrisBoard PTR [esi]).grid
+        .ENDIF
+        dec row
+    .ENDW
 END
