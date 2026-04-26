@@ -75,4 +75,24 @@ board_clear_lines PROC PUBLIC USES esi edi ebx edx, pBoard:DWORD
     mov writeRow, TETRIS_BOARD_HEIGHT - 1
 
     mov row, TETRIS_BOARD_HEIGHT - 1
+    .WHILE row != 0FFFFFFFFh
+        mov edi, esi
+        mov eax, row
+        mov ebx, TETRIS_BOARD_WIDTH
+        mul ebx
+        add edi, eax
+
+        ; check if row is full
+        mov ecx, TETRIS_BOARD_WIDTH
+        mov al, 0
+        repne scasb
+        .IF ecx == 0
+            ; full row - skip it (do not write)
+        .ELSE
+            ; copy row down
+            mov edi, esi
+            mov eax, writeRow
+            mov ebx, TETRIS_BOARD_WIDTH
+            mul ebx
+            add edi, eax
 END
