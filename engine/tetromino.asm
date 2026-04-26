@@ -1,10 +1,21 @@
 INCLUDE default_header.inc
 INCLUDE tetromino.inc
 INCLUDE heap_functions.inc
-INCLUDE rect_component.inc
 INCLUDE transform_component.inc
+INCLUDE tetris_board.inc
+INCLUDE component_ids.inc
+
 .data
 TETROMINO_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET tetromino_update, OFFSET game_object_exit, OFFSET free_game_object>
+
+PIECE_COLORS DWORD \
+    0FF00FFFFh,  ; I
+    0FFFFFF00h,  ; O
+    0FF800080h,  ; T
+    0FF00FF00h,  ; S
+    0FFFF0000h,  ; Z
+    0FF0000FFh,  ; J
+    0FFFFA500h   ; L
 .code
 
 get_shape_offset PROC PRIVATE, typeId:DWORD, rotation:DWORD
