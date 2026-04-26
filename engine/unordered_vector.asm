@@ -6,7 +6,12 @@ INCLUDE unordered_vector.inc
 init_unordered_vector PROC PUBLIC USES esi, capacity : DWORD
 	mov eax, capacity
 	shl eax, 2
+	; // BUG FIXED: Win32 stdcall (HeapAlloc) does not guarantee ECX is preserved.
+	; //   ecx held the UnorderedVector "this" pointer; after INVOKE HeapAlloc it could
+	; //   be garbage. Save/restore ecx explicitly around the call.
+	push ecx
 	INVOKE HeapAlloc, hHeap, HEAP_GENERATE_EXCEPTIONS, eax
+	pop ecx
 	mov (UnorderedVector PTR [ecx]).pData, eax
 	mov (UnorderedVector PTR [ecx]).count, 0
 	mov (UnorderedVector PTR [ecx]).capacity, capacity
@@ -38,7 +43,12 @@ push_back PROC PUBLIC USES eax ebx edx edi, element: DWORD
 		shl edx, 1
 		mov (UnorderedVector PTR [ecx]).capacity, edx
 		shl edx, 2
+		; // BUG FIXED: Win32 stdcall (HeapReAlloc) does not guarantee ECX is preserved.
+		; //   Without saving ecx, the "mov (UnorderedVector PTR [ecx]).pData, eax" below
+		; //   could corrupt an arbitrary memory address.
+		push ecx
 		INVOKE HeapReAlloc, hHeap, HEAP_GENERATE_EXCEPTIONS, (UnorderedVector PTR [ecx]).pData, edx
+		pop ecx
 		mov (UnorderedVector PTR [ecx]).pData, eax
 	.ENDIF
 
