@@ -140,6 +140,25 @@ can_place PROC PRIVATE USES esi edi ebx edx, pBoard:DWORD, pTetromino:DWORD, dx_
             add eax, ty
             mov by, eax
 
+			; bounds check
+            .IF bx < 0 || bx >= TETRIS_BOARD_WIDTH || by >= TETRIS_BOARD_HEIGHT
+                mov eax, 0
+                ret
+            .ENDIF
+            .IF by < 0
+                inc ecx
+                .CONTINUE
+            .ENDIF
+
+            ; check board grid
+            mov esi, pBoard
+            lea esi, (TetrisBoard PTR [esi]).grid
+            mov eax, by
+            mov ebx, TETRIS_BOARD_WIDTH
+            mul ebx
+            add eax, bx
+            mov al, [esi + eax]
+
 tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
     mov esi, ecx
     ; Handles player input for movement and rotation
