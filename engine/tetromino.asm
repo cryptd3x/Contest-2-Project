@@ -8,6 +8,24 @@ INCLUDE component_ids.inc
 .data
 TETROMINO_VTABLE GameObject_vtable <OFFSET game_object_start, OFFSET tetromino_update, OFFSET game_object_exit, OFFSET free_game_object>
 
+; 4x4 shapes for each piece type across 4 rotations (flat layout)
+SHAPES LABEL BYTE
+    ; I
+    BYTE 0,0,0,0, 1,1,1,1, 0,0,0,0, 0,0,0,0
+    BYTE 0,1,0,0, 0,1,0,0, 0,1,0,0, 0,1,0,0
+    BYTE 0,0,0,0, 1,1,1,1, 0,0,0,0, 0,0,0,0
+    BYTE 0,1,0,0, 0,1,0,0, 0,1,0,0, 0,1,0,0
+    ; O
+    BYTE 0,0,0,0, 0,1,1,0, 0,1,1,0, 0,0,0,0
+    BYTE 0,0,0,0, 0,1,1,0, 0,1,1,0, 0,0,0,0
+    BYTE 0,0,0,0, 0,1,1,0, 0,1,1,0, 0,0,0,0
+    BYTE 0,0,0,0, 0,1,1,0, 0,1,1,0, 0,0,0,0
+    ; T
+    BYTE 0,1,0,0, 1,1,1,0, 0,0,0,0, 0,0,0,0
+    BYTE 0,1,0,0, 0,1,1,0, 0,1,0,0, 0,0,0,0
+    BYTE 0,0,0,0, 1,1,1,0, 0,1,0,0, 0,0,0,0
+    BYTE 0,1,0,0, 1,1,0,0, 0,1,0,0, 0,0,0,0
+
 PIECE_COLORS DWORD \
     0FF00FFFFh,  ; I
     0FFFFFF00h,  ; O
