@@ -158,6 +158,16 @@ can_place PROC PRIVATE USES esi edi ebx edx, pBoard:DWORD, pTetromino:DWORD, dx_
             mul ebx
             add eax, bx
             mov al, [esi + eax]
+			.IF al != 0
+                mov eax, 0
+                ret
+            .ENDIF
+        .ENDIF
+        inc ecx
+    .ENDW
+    mov eax, 1
+    ret
+can_place ENDP
 
 tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
     mov esi, ecx
