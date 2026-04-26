@@ -53,10 +53,16 @@ queue_free_game_object PROC PUBLIC USES esi, pGameObject:DWORD
 	ret
 queue_free_game_object ENDP
 
-scene_update PROC PUBLIC USES ecx, deltaTime:REAL4
-	INVOKE updateInput
-	; TODO: process start queue, update objects, free queue, render (add later)
-	ret
+scene_update PROC PUBLIC USES esi edi ebx, deltaTime:REAL4
+    INVOKE updateInput
+
+    ; Process start queue, move new objects to active list and call start
+    ; Update all active GameObjects
+    ; Process free queue and remove destroyed objects
+    ; Collect render commands from components
+    ; Render the frame
+
+    ret
 scene_update ENDP
 
 end
