@@ -6,6 +6,7 @@ INCLUDE renderer.inc
 
 .code
 init_scene PROC PUBLIC USES esi, maxGameObjects:DWORD
+	mov esi, ecx                           ; // Save Scene pointer — ecx is about to be overwritten
 	lea ecx, (Scene PTR [ecx]).camera
 	INVOKE init_camera, 0, 0
 	lea ecx, (Scene PTR [esi]).gameObjects
