@@ -1,18 +1,18 @@
-IFNDEF TETROMINO_INC
-TETROMINO_INC EQU 1
-
+IFNDEF TETRIS_BOARD_INC
+TETRIS_BOARD_INC EQU 1
 INCLUDE game_object.inc
+TETRIS_BOARD_WIDTH  EQU 10
+TETRIS_BOARD_HEIGHT EQU 20
 
-Tetromino STRUCT
+TetrisBoard STRUCT
     baseGameObject GameObject<>
-    shape          BYTE 16 DUP(0)     ; 4x4 grid (1 = block)
-    rotation       DWORD ?            ; 0-3
-    typeId         DWORD ?            ; 0=I, 1=O, 2=T, 3=S, 4=Z, 5=J, 6=L
-    dropTimer      REAL4 ?            ; accumulated time for automatic drop
-Tetromino ENDS
+    grid           BYTE (TETRIS_BOARD_WIDTH * TETRIS_BOARD_HEIGHT) DUP(0)
+TetrisBoard ENDS
 
-init_tetromino     PROTO
-new_tetromino      PROTO
-tetromino_update   PROTO stdcall deltaTime:REAL4
+init_tetris_board     PROTO
+new_tetris_board      PROTO
+board_lock_tetromino  PROTO pBoard:DWORD, pTetromino:DWORD
+board_clear_lines     PROTO pBoard:DWORD
+board_can_place       PROTO pBoard:DWORD, pTetromino:DWORD, dx:SDWORD, dy:SDWORD
 
 ENDIF
