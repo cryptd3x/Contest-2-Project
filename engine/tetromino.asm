@@ -62,8 +62,21 @@ can_place PROC PRIVATE USES esi edi ebx, pBoard:DWORD, pTetromino:DWORD, dx_:SDW
     ret
 can_place ENDP
 
-tetromino_update PROC stdcall PUBLIC USES ecx, deltaTime:REAL4
-	ret
-tetromino_update ENDP
+tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
+    mov esi, ecx
+    ; Handles player input for movement and rotation
+    INVOKE isKeyJustPressed, VK_LEFT
+    .IF eax ; then attempt left movement  
+    .ENDIF
 
-end
+    INVOKE isKeyJustPressed, VK_RIGHT
+    .IF eax ; then attempt right movement
+    .ENDIF
+
+    INVOKE isKeyJustPressed, VK_DOWN
+    .IF eax ; then soft drop
+    .ENDIF
+
+    INVOKE isKeyJustPressed, VK_UP
+    .IF eax ; then rotate
+    .ENDIF
