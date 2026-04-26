@@ -220,17 +220,34 @@ tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
     .ENDIF
 
     ; Automatic downward movement
-    fld (Tetromino PTR [esi]).dropTimer
+fld (Tetromino PTR [esi]).dropTimer
     fadd deltaTime
     fstp (Tetromino PTR [esi]).dropTimer
 
     .IF (Tetromino PTR [esi]).dropTimer > 0.4
-        .IF can_place(...) == 0 ; then lock piece to board, clear completed lines, queue free, spawn new piece   
-        .ELSE ; then move down one row
+        INVOKE get_first_game_object_which_is_a, TETRIS_BOARD_GAME_OBJECT_ID
+        INVOKE can_place, eax, esi, 0, 1
+        .IF eax
+            INVOKE get_first_component_which_is_a, TRANSFORM_COMPONENT_ID
+            inc (TransformComponent PTR [eax]).y
+        .ELSE
+            ; Lock piece
+            INVOKE get_first_game_object_which_is_a, TETRIS_BOARD_GAME_OBJECT_ID
+            INVOKE board_lock_tetromino, eax, esi
+            INVOKE board_clear_lines, eax
+
+            ; Queue free this tetromino
+            INVOKE get_first_game_object_which_is_a, TETRIS_BOARD_GAME_OBJECT_ID
+            mov ecx, eax
+            INVOKE get_first_component_which_is_a, TRANSFORM_COMPONENT_ID   ; dummy to restore ecx if needed
+            INVOKE queue_free_game_object, esi
+
+            ; Spawn new tetromino via manager (in practice, manager handles this; here we assume scene will handle via start queue)
         .ENDIF
         mov (Tetromino PTR [esi]).dropTimer, 0.0
     .ENDIF
+
     ret
 tetromino_update ENDP
 
-end
+END
