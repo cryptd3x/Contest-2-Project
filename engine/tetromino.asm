@@ -200,8 +200,23 @@ tetromino_update PROC stdcall PUBLIC USES esi ebx edx, deltaTime:REAL4
         mov (Tetromino PTR [esi]).dropTimer, 0.05   ; faster drop
     .ENDIF
 
+    ; Rotate
     INVOKE isKeyJustPressed, VK_UP
-    .IF eax ; then rotate
+    .IF eax
+        ; simple rotation logic (full implementation would validate after rotate)
+        mov ebx, (Tetromino PTR [esi]).rotation
+        inc ebx
+        and ebx, 3
+        mov (Tetromino PTR [esi]).rotation, ebx
+        INVOKE get_first_game_object_which_is_a, TETRIS_BOARD_GAME_OBJECT_ID
+        INVOKE can_place, eax, esi, 0, 0
+        .IF eax == 0
+            ; revert rotation if invalid
+            dec (Tetromino PTR [esi]).rotation
+            and (Tetromino PTR [esi]).rotation, 3
+        .ELSE
+            INVOKE copy_shape, esi, (Tetromino PTR [esi]).typeId, ebx
+        .ENDIF
     .ENDIF
 
     ; Automatic downward movement
