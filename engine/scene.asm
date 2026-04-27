@@ -56,7 +56,26 @@ queue_free_game_object ENDP
 scene_update PROC PUBLIC USES esi edi ebx, deltaTime:REAL4
     INVOKE updateInput
 
-    ; Process start queue, move new objects to active list and call start
+    ; Process start queue
+    lea ecx, (Scene PTR [ecx]).startQueue
+    mov ebx, (UnorderedVector PTR [ecx]).count
+    .IF ebx > 0
+        mov esi, (UnorderedVector PTR [ecx]).pData
+        mov edi, 0
+        .WHILE edi < ebx
+            mov eax, [esi + edi*4]
+            push eax
+            INVOKE game_object_start_virtual
+            pop eax
+            lea ecx, (Scene PTR [ecx]).gameObjects
+            INVOKE push_back, eax
+            lea ecx, (Scene PTR [ecx]).startQueue   ; restore
+            inc edi
+        .ENDW
+        ; clear start queue (simple reset for this implementation)
+        mov (UnorderedVector PTR [ecx]).count, 0
+    .ENDIF
+
     ; Update all active GameObjects
     ; Process free queue and remove destroyed objects
     ; Collect render commands from components
