@@ -88,6 +88,19 @@ scene_update PROC PUBLIC USES esi edi ebx, deltaTime:REAL4
     .ENDW
 
     ; Process free queue and remove destroyed objects
+    lea ecx, (Scene PTR [ecx]).freeQueue
+    mov ebx, (UnorderedVector PTR [ecx]).count
+    .IF ebx > 0
+        mov esi, (UnorderedVector PTR [ecx]).pData
+        mov edi, 0
+        .WHILE edi < ebx
+            mov ecx, [esi + edi*4]
+            INVOKE game_object_free_virtual
+            inc edi
+        .ENDW
+        mov (UnorderedVector PTR [ecx]).count, 0
+    .ENDIF
+
     ; Collect render commands from components
     ; Render the frame
 
