@@ -20,6 +20,7 @@ new_transform_component PROC PUBLIC USES ecx, x: DWORD, y: DWORD, ignoreCamera: 
 	INVOKE HeapAlloc, hHeap, HEAP_GENERATE_EXCEPTIONS, SIZEOF TransformComponent
 	mov ecx, eax
 	INVOKE init_transform_component, x, y, ignoreCamera
+	mov eax, ecx	; FIX: return the allocated pointer in eax
 	ret
 new_transform_component ENDP
 
