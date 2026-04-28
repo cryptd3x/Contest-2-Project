@@ -1,7 +1,8 @@
 # Tetris - MASM x86 Assembly Game
 
 A classic Tetris clone written in x86 Assembly Language using MASM (Microsoft Macro Assembler).
-By Justin Bower
+
+By: Justin Bower
 
 ## How to Build and Run the Game
 
