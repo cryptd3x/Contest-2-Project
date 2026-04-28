@@ -15,7 +15,7 @@ By: Justin Bower
 
 1. Click the **Windows Start button**.
 2. Type: `Developer Command Prompt for VS 2019`
-3. Launch **"Developer Command Prompt for VS 2019"**  
+3. Launch `Developer Command Prompt for VS 2019` 
 
 ### Step 3: Navigate to the Project Folder
 
